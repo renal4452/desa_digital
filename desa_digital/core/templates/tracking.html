@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <div class="bg-primary bg-opacity-10 d-inline-block p-3 rounded-circle mb-3">
+                <i class="bi bi-search fs-2 text-primary"></i>
+            </div>
+            <h3 class="fw-bold">Lacak Dokumen Anda</h3>
+            <p class="text-muted small">Masukkan kode pengajuan unik untuk melihat progres dan mengunduh hasil.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form method="get">
+                    <div class="input-group input-group-lg">
+                        <input name="kode" class="form-control border-end-0" 
+                               placeholder="Contoh: SR-2024001" 
+                               value="{{ request.GET.kode|default:'' }}" required>
+                        <button class="btn btn-primary px-4 border-start-0">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if data %}
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeIn">
+            <div class="card-header bg-dark py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-white-50 small">Hasil Pencarian:</span>
+                    <span class="badge bg-light text-dark fw-bold">#{{ data.id|stringformat:"05d" }}</span>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    {% if data.status == 'diajukan' %}
+                        <div class="badge bg-info p-2 px-3 rounded-pill text-dark mb-2">Diajukan</div>
+                        <h4 class="fw-bold">Dokumen Diterima</h4>
+                    {% elif data.status == 'diproses' %}
+                        <div class="badge bg-warning p-2 px-3 rounded-pill text-dark mb-2">Diproses</div>
+                        <h4 class="fw-bold">Sedang Dalam Validasi</h4>
+                    {% elif data.status == 'selesai' %}
+                        <div class="badge bg-success p-2 px-3 rounded-pill text-white mb-2">Selesai</div>
+                        <h4 class="fw-bold text-success">Surat Sudah Siap!</h4>
+                    {% else %}
+                        <div class="badge bg-danger p-2 px-3 rounded-pill text-white mb-2">Ditolak</div>
+                        <h4 class="fw-bold text-danger">Pengajuan Ditolak</h4>
+                    {% endif %}
+                </div>
+
+                <div class="bg-light rounded-3 p-3">
+                    <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                        <span class="text-muted small">Nama Pemohon</span>
+                        <span class="fw-bold">{{ data.nama }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted small">Jenis Dokumen</span>
+                        <span class="fw-bold">{{ data.get_jenis_display }}</span>
+                    </div>
+                </div>
+
+                {% if data.status == 'selesai' and data.file_surat_jadi %}
+                    <div class="mt-4">
+                        <a href="{{ data.file_surat_jadi.url }}" class="btn btn-success w-100 py-3 rounded-3 shadow">
+                            <i class="bi bi-cloud-download-fill me-2"></i> Download Surat Digital
+                        </a>
+                        <p class="text-center text-muted x-small mt-2">
+                            <i class="bi bi-shield-check"></i> Dokumen ditandatangani secara elektronik
+                        </p>
+                    </div>
+                {% elif data.status == 'ditolak' %}
+                    <div class="alert alert-danger mt-4 mb-0 py-2 small">
+                        <i class="bi bi-exclamation-triangle me-2"></i> Mohon hubungi kantor desa untuk informasi lebih lanjut.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% elif request.GET.kode %}
+            <div class="alert alert-warning border-0 shadow-sm text-center py-4 rounded-4">
+                <i class="bi bi-exclamation-circle fs-2 d-block mb-2"></i>
+                <h6 class="fw-bold">Kode Tidak Ditemukan</h6>
+                <p class="small mb-0">Pastikan kode yang Anda masukkan benar dan sudah terdaftar.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .x-small { font-size: 0.75rem; }
+    .animate__fadeIn { animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+</style>
+
+{% endblock %}

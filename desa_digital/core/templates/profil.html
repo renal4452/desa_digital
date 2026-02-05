@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-5 animate__animated animate__fadeIn">
+    <div class="col-12">
+        {% if desa %}
+        <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+            <div class="row g-0">
+                <div class="col-lg-6">
+                    {% if desa.galeri_foto %}
+                    <img src="{{ desa.galeri_foto.url }}" class="img-fluid h-100 w-100" alt="{{ desa.nama }}" style="object-fit: cover; min-height: 350px;">
+                    {% else %}
+                    <div class="bg-secondary d-flex align-items-center justify-content-center h-100" style="min-height: 350px;">
+                        <i class="bi bi-image text-white fs-1"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 d-flex align-items-center">
+                    <div class="card-body p-4 p-md-5">
+                        <span class="badge bg-success mb-2 px-3 rounded-pill">Profil Resmi</span>
+                        <h1 class="fw-bold mb-3">Desa {{ desa.nama }}</h1>
+                        
+                        <div class="d-flex gap-3 mb-4">
+                            <div class="p-2 bg-light rounded text-center" style="min-width: 100px;">
+                                <small class="d-block text-muted">Penduduk</small>
+                                <span class="fw-bold text-success">{{ desa.jumlah_penduduk }}</span>
+                            </div>
+                            <div class="p-2 bg-light rounded text-center" style="min-width: 100px;">
+                                <small class="d-block text-muted">UMKM</small>
+                                <span class="fw-bold text-success">{{ umkm|length }} Unit</span>
+                            </div>
+                        </div>
+
+                        <p class="text-muted mb-4">{{ desa.deskripsi }}</p>
+
+                        <div class="row g-2">
+                            <div class="col-md-6 small">
+                                <i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>Lokasi:</strong> {{ desa.lokasi|default:"-" }}
+                            </div>
+                            <div class="col-md-6 small">
+                                <i class="bi bi-star-fill text-warning me-2"></i><strong>Wisata:</strong> {{ desa.potensi_wisata|default:"-" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning border-0 shadow-sm rounded-4 py-4 text-center">
+            <i class="bi bi-exclamation-triangle fs-2 mb-2 d-block"></i>
+            Data profil desa belum diisi oleh admin.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">Potensi UMKM Unggulan</h3>
+    <hr class="flex-grow-1 ms-3 d-none d-md-block opacity-25">
+</div>
+
+<div class="row g-4">
+    {% for item in umkm %}
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-up">
+            <div class="position-relative">
+                {% if item.foto %}
+                <img src="{{ item.foto.url }}" class="card-img-top" alt="{{ item.nama }}" style="height: 220px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                    <i class="bi bi-shop fs-1 text-muted opacity-25"></i>
+                </div>
+                {% endif %}
+                <span class="badge bg-dark bg-opacity-75 position-absolute bottom-0 start-0 m-3 rounded-pill">{{ item.kategori }}</span>
+            </div>
+            <div class="card-body">
+                <h5 class="fw-bold mb-2">{{ item.nama }}</h5>
+                <p class="text-muted small mb-3">{{ item.deskripsi|truncatewords:15 }}</p>
+                
+                {% if item.kontak %}
+                <div class="d-grid mt-auto">
+                    <a href="https://wa.me/{{ item.kontak }}" class="btn btn-outline-success btn-sm rounded-3">
+                        <i class="bi bi-whatsapp me-2"></i>Hubungi UMKM
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5 bg-light rounded-4 border-dashed">
+        <i class="bi bi-basket fs-1 text-muted opacity-50"></i>
+        <p class="text-muted mt-2">Belum ada UMKM yang terdaftar.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .hover-up {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-up:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+    .border-dashed {
+        border: 2px dashed #dee2e6;
+    }
+</style>
+
+{% endblock %}

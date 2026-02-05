@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+        
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-success">Formulir Pengajuan</h2>
+            <p class="text-muted small">Pastikan semua data diisi dengan benar sebelum mengirim.</p>
+        </div>
+
+        {% if messages %}
+            {% for m in messages %}
+            <div class="alert alert-success border-0 shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ m }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        {% for field in form %}
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold mb-1 small text-secondary" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            
+                            <div class="custom-form-field">
+                                {{ field }}
+                            </div>
+
+                            {% if field.help_text %}
+                                <div class="form-text small">{{ field.help_text }}</div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="text-danger x-small fw-bold mt-1">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg py-2 fw-bold shadow-sm">
+                            <i class="bi bi-send me-2"></i>Ajukan Surat
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-3 text-muted x-small">
+            <i class="bi bi-shield-check"></i> Data Anda akan dikirim langsung ke database desa.
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CSS MAGIC: Memaksa semua elemen input Django menjadi rapi */
+    .custom-form-field input, 
+    .custom-form-field select, 
+    .custom-form-field textarea {
+        display: block;
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 8px !important; /* Membuat sudut membulat */
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Efek saat input diklik */
+    .custom-form-field input:focus, 
+    .custom-form-field select:focus, 
+    .custom-form-field textarea:focus {
+        border-color: #198754;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+        background-color: #fdfdfd;
+    }
+
+    /* Khusus untuk tampilan input file agar tidak berantakan */
+    .custom-form-field input[type="file"] {
+        padding: 7px;
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    /* Ukuran teks error */
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    /* Menghilangkan bullet point dari error Django */
+    .text-danger ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+{% endblock %}

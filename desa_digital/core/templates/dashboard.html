@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="mb-4">
+    <h2 class="fw-bold text-dark">Dashboard Desa Digital</h2>
+    <p class="text-muted">Selamat datang, <span class="text-success fw-semibold">{{ user.username }}</span>. Berikut ringkasan data desa saat ini.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card border-0 bg-primary text-white shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-shrink-0 bg-white bg-opacity-25 p-3 rounded-circle me-3">
+                    <i class="bi bi-people-fill fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="card-title mb-0 opacity-75">Total Warga</h6>
+                    <h2 class="fw-bold mb-0">{{ warga }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 bg-success text-white shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-shrink-0 bg-white bg-opacity-25 p-3 rounded-circle me-3">
+                    <i class="bi bi-envelope-check-fill fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="card-title mb-0 opacity-75">Total Surat</h6>
+                    <h2 class="fw-bold mb-0">{{ surat }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 bg-warning text-dark shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-shrink-0 bg-dark bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="bi bi-hourglass-split fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="card-title mb-0 opacity-75">Menunggu (Pending)</h6>
+                    <h2 class="fw-bold mb-0">{{ pending }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-4 opacity-25">
+
+<div class="row">
+    <div class="col-12">
+        <h5 class="mb-3 text-secondary fw-semibold"><i class="bi bi-lightning-charge me-2"></i>Aksi Cepat</h5>
+        <div class="d-flex flex-wrap gap-2">
+            
+            {% if user.profile.role == "kepala" or user.profile.role == "sekretaris" %}
+                <a href="{% url 'warga_list' %}" class="btn btn-outline-secondary px-4 py-2">
+                    <i class="bi bi-table me-2"></i>Kelola Data Warga
+                </a>
+                <a href="{% url 'surat_admin' %}" class="btn btn-primary px-4 py-2 shadow-sm">
+                    <i class="bi bi-shield-check me-2"></i>Admin Kelola Surat
+                </a>
+            {% endif %}
+
+            {% if user.profile.role == "kepala" %}
+                <a href="{% url 'profil' %}" class="btn btn-info text-white px-4 py-2 shadow-sm">
+                    <i class="bi bi-gear-fill me-2"></i>Pengaturan Profil Desa
+                </a>
+            {% endif %}
+
+            {% if user.profile.role == "kaur" %}
+                <a href="{% url 'surat_status' %}" class="btn btn-warning px-4 py-2 shadow-sm">
+                    <i class="bi bi-search me-2"></i>Cek Status Surat
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
