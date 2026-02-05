@@ -1,8 +1,8 @@
 ## 🔐 Demo Login
 
 Perangkat Desa:
-- Username: admin_demo
-- Password: Demo123!
+- Username: asus
+- Password: 123456
 
 Warga tidak perlu login untuk:
 - Profil Desa
